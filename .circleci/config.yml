@@ -129,6 +129,7 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      
       - run: yum install tar gzip -y
       - run:
           name: Ensure back-end infrastructure exists
@@ -299,10 +300,10 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [master]
-#       - configure-infrastructure:
+#           filters:
+#             branches:
+#               only: [master]
+# #       - configure-infrastructure:
 #           requires: [deploy-infrastructure]
 #       - run-migrations:
 #           requires: [configure-infrastructure]
