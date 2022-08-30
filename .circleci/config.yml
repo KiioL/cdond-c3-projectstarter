@@ -152,7 +152,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
-            --query "Reservations[*].Instances[*].[PublicAddress]" \
+            --query "Reservations[*].Instances[*].[PublicIpAddress]" \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> ~/project/.circleci/ansible/inventory.txt
             cat ~/project/.circleci/ansible/inventory.txt 
@@ -162,24 +162,33 @@ jobs:
             - project/.circleci/ansible/inventory.txt 
       # Here's where you will add some code to rollback on failure      
 
-#   configure-infrastructure:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Configure server
-#           command: |
-#             # Your code here
-#             exit 1
-#       # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+      # Docker image here that supports Ansible
+      - image : python:3.10-alpine3.16
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+         fingerprints:
+            - "4a:73:2e:9e:dd:74:6f:ae:98:65:5a:81:8e:24:5c:ca"
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update --no-cache ansible tar gzip aws-cli openssh
+      - run:
+          name: Configure server
+          command: |
+            pwd
+            cd .circleci/ansible
+            ls -al
+            ansible-playbook -i inventory.txt configure-server.yml
+          no_output_timeout: 30m
+      # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
 #     docker:
