@@ -14,7 +14,6 @@ commands:
           command: |
             echo "Destroying environment: << parameters.workflow_id >> "
             pwd
-            cat ~/my_env
             export $(grep BACKEND_STACK ~/my_env)
             export $(grep FRONTEND_STACK ~/my_env)
             echo $FRONTEND_STACK
@@ -310,6 +309,7 @@ jobs:
             pwd
             ls -al
             npm install
+            npm audit fix --force
             npm run build
             cd ..
             pwd
