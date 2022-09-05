@@ -300,7 +300,7 @@ jobs:
             
             pwd
             ls -al
-            npm install
+            npm install -g npm
             npm run build
             cd ..
             pwd
