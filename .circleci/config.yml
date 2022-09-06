@@ -264,7 +264,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: python:3.10-alpine3.16
+      - image: python:3.9.0-alpine
     steps:
       # Checkout code from git
       - checkout
@@ -300,7 +300,7 @@ jobs:
             
             pwd
             ls -al
-            sudo npm install -g npm
+            npm i
             npm run build
             cd ..
             pwd
