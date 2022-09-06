@@ -46,11 +46,15 @@
     src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/backend_app_dir/artifact.tar.gz
     
-- name: "Start app"
+- name: 'install backend-app dependencies'
   become: true
   shell: |
     cd /home/ubuntu/backend_app_dir
     npm install
-    npm run build
+    
+- name: "Start app"
+  become: true
+  shell: |
+    cd /home/ubuntu/backend_app_dir
     pm2 stop all
     pm2 start npm --start
